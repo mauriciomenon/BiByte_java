@@ -61,7 +61,7 @@ public class MyJFrame extends javax.swing.JFrame {
         jLabel4.setText("Sugestões/erros: Menon");
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        jLabel7.setText("Calculadora de Pontos Digitais SCADA");
+        jLabel7.setText("Conversão de Pontos Digitais SCADA ");
 
         jLabel8.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel8.setText("IEC-870-5 SDRM");

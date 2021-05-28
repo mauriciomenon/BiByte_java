@@ -2,7 +2,7 @@
 package rtu_location;       /* alterado de  http://docs.oracle.com/javase/tutorial/uiswing/components/table.html  */
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JPanel; 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;

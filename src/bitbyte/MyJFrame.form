@@ -85,7 +85,7 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="12" style="1"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Calculadora de Pontos Digitais SCADA"/>
+        <Property name="text" type="java.lang.String" value="Convers&#xe3;o de Pontos Digitais SCADA "/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
