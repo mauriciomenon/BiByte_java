@@ -57,6 +57,17 @@ jobs:
         with:
           arguments: build -PprojVersion=${{ steps.plan.outputs.tag }}
 
+      - name: Prepare latest asset name
+        id: latest
+        shell: bash
+        run: |
+          ART="${{ steps.plan.outputs.artifact }}"
+          # Resolve single file path if glob
+          FILE="$(ls -1 ${ART} | head -n1)"
+          echo "file=$FILE" >> $GITHUB_OUTPUT
+          echo "latest=BiByte-latest.jar" >> $GITHUB_OUTPUT
+          cp -f "$FILE" "${{ steps.latest.outputs.latest }}" || true
+
       - name: Generate release notes (optional)
         run: |
           TAG='${{ steps.plan.outputs.tag }}'
@@ -118,7 +129,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.plan.outputs.tag }}
-          files: ${{ steps.plan.outputs.artifact }}
+          files: |
+            ${{ steps.latest.outputs.file }}
+            ${{ steps.latest.outputs.latest }}
           generate_release_notes: true
           body_path: RELEASE_NOTES.md
         env:
