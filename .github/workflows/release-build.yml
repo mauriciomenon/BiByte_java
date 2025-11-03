@@ -1,0 +1,61 @@
+name: Build and Attach Release Artifacts
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Determine build strategy
+        id: plan
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          echo "Tag is $TAG"
+          if [[ "$TAG" =~ ^v1\.0\..* || "$TAG" =~ ^v1\.1\..* ]]; then
+            echo "build_system=ant" >> $GITHUB_OUTPUT
+            echo "java=8" >> $GITHUB_OUTPUT
+            echo "artifact=dist/Bitbyte.jar" >> $GITHUB_OUTPUT
+          elif [[ "$TAG" =~ ^v1\.8\..* || "$TAG" == v1.9.0 ]]; then
+            echo "build_system=ant" >> $GITHUB_OUTPUT
+            echo "java=17" >> $GITHUB_OUTPUT
+            echo "artifact=dist/Bitbyte.jar" >> $GITHUB_OUTPUT
+          else
+            echo "build_system=gradle" >> $GITHUB_OUTPUT
+            echo "java=25" >> $GITHUB_OUTPUT
+            echo "artifact=build/libs/*.jar" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ steps.plan.outputs.java }}
+
+      - name: Install Ant (for legacy)
+        if: steps.plan.outputs.build_system == 'ant'
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      - name: Build with Ant
+        if: steps.plan.outputs.build_system == 'ant'
+        run: ant clean jar
+
+      - name: Build with Gradle
+        if: steps.plan.outputs.build_system == 'gradle'
+        uses: gradle/gradle-build-action@v3
+        with:
+          arguments: build
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.plan.outputs.artifact }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
