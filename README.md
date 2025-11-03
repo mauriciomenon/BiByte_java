@@ -27,6 +27,16 @@ BiByte é uma ferramenta desktop em Java para engenheiros de automação e contr
   - Atualização de `javac.source`/`javac.target` para 17 nos projetos Ant (`nbproject/` e `Bitbyte/nbproject/`).
   - Build (Ant) sob JDK 17: `ant clean jar`.
 
+- v1.9.1 (Gradle inicial)
+  - Introdução do Gradle (Java 17), estrutura de fontes `src/` e `test/`, e JUnit 5.
+
+- v1.9.2 (Compatibilidade local JDK)
+  - Ajustes no Gradle para compilar com JDK atual sem toolchain.
+
+- v1.9.3 (Ant/Gradle em Java 25)
+  - Projetos Ant migrados para `javac.source/target=25`.
+  - Gradle configurado com toolchain Java 25 e JUnit 5 atualizado.
+
 - v1.9.1+ (Migração Gradual para Gradle)
   - Introdução de Gradle (Java 17), ajustes de estrutura e testes (JUnit 5), documentação atualizada.
 
@@ -35,13 +45,13 @@ BiByte é uma ferramenta desktop em Java para engenheiros de automação e contr
 
 ## Como Compilar e Executar
 
-Enquanto Ant for o sistema principal (até 1.9.0):
-- Requisitos: JDK 17 (ou superior) + Ant.
+Enquanto Ant for o sistema principal (até 1.9.3):
+- Requisitos: JDK 25 (ou superior) + Ant.
 - Comando: `ant clean jar`.
 - Saída: `dist/Bitbyte.jar`.
 
 Após migração para Gradle (1.9.1+ até 2.0.0):
-- Requisitos: JDK 17 e Gradle.
+- Requisitos: JDK 25 e Gradle.
 - Compilar: `gradle build` (JAR em `build/libs/`).
 - Executar: `gradle run` ou `java -jar build/libs/BiByte-<versao>.jar`.
 - Testes: `gradle test`.
