@@ -55,6 +55,7 @@ jobs:
         if: steps.plan.outputs.build_system == 'gradle'
         uses: gradle/gradle-build-action@v3
         with:
+          gradle-version: 9.2
           arguments: build -PprojVersion=${{ steps.plan.outputs.tag }}
 
       - name: Prepare latest asset name
@@ -65,8 +66,9 @@ jobs:
           # Resolve single file path if glob
           FILE="$(ls -1 ${ART} | head -n1)"
           echo "file=$FILE" >> $GITHUB_OUTPUT
-          echo "latest=BiByte-latest.jar" >> $GITHUB_OUTPUT
-          cp -f "$FILE" "${{ steps.latest.outputs.latest }}" || true
+          LATEST="BiByte-latest.jar"
+          cp -f "$FILE" "$LATEST" || true
+          echo "latest=$LATEST" >> $GITHUB_OUTPUT
 
       - name: Generate release notes (optional)
         run: |

@@ -22,5 +22,5 @@ jobs:
       - name: Gradle Build
         uses: gradle/gradle-build-action@v3
         with:
+          gradle-version: 9.2
           arguments: build
-
