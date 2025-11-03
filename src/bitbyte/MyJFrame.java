@@ -233,23 +233,23 @@ public class MyJFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void ShowUTR1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ShowUTR1MouseClicked
+    private void ShowUTR1MouseClicked(java.awt.event.MouseEvent evt) {
         JFrame frame = new JFrame("Tabela de Localização das Remotas (UTR)");
         TableRTU newContentPane = new TableRTU();
         newContentPane.setOpaque(true);
         frame.setContentPane(newContentPane);
         frame.pack();
         frame.setVisible(true);
-    }//GEN-LAST:event_ShowUTR1MouseClicked
+    }
 
-    private void jButton_show_CColorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton_show_CColorMouseClicked
+    private void jButton_show_CColorMouseClicked(java.awt.event.MouseEvent evt) {
         JFrame frame = new JFrame("Cores de Fios (6006DC07199E)");
         TableCableColor newContentPane = new TableCableColor();
         newContentPane.setOpaque(true);
         frame.setContentPane(newContentPane);
         frame.pack();
         frame.setVisible(true);
-    }//GEN-LAST:event_jButton_show_CColorMouseClicked
+    }
 
     public javax.swing.JLabel getErrorLabel() {
         return errorLabel;

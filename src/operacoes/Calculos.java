@@ -84,29 +84,6 @@ public class Calculos {
     private static final int BITBYTE_LATCH_TS_START = 5632;
     private static final int BITBYTE_LATCH_TS_END = 6143;
     private static final int BITBYTE_LATCH_TS_OFFSET = 30368;
-    // Sub-ranges
-    private static final int BITBYTE_LATCH_TS_SUB_START_1 = 5632;
-    private static final int BITBYTE_LATCH_TS_SUB_END_1 = 5639;
-    private static final int BITBYTE_LATCH_TS_SUB_START_2 = 5648;
-    private static final int BITBYTE_LATCH_TS_SUB_END_2 = 5655;
-    private static final int BITBYTE_LATCH_TS_SUB_START_3 = 5664;
-    private static final int BITBYTE_LATCH_TS_SUB_END_3 = 5671;
-    private static final int BITBYTE_LATCH_TS_SUB_START_4 = 5680;
-    private static final int BITBYTE_LATCH_TS_SUB_END_4 = 5687;
-    private static final int BITBYTE_LATCH_TS_SUB_START_5 = 5696;
-    private static final int BITBYTE_LATCH_TS_SUB_END_5 = 5703;
-    private static final int BITBYTE_LATCH_TS_SUB_START_6 = 5712;
-    private static final int BITBYTE_LATCH_TS_SUB_END_6 = 5719;
-    private static final int BITBYTE_LATCH_TS_SUB_START_7 = 5728;
-    private static final int BITBYTE_LATCH_TS_SUB_END_7 = 5735;
-    private static final int BITBYTE_LATCH_TS_SUB_START_8 = 5744;
-    private static final int BITBYTE_LATCH_TS_SUB_END_8 = 5751;
-    private static final int BITBYTE_LATCH_TS_SUB_START_9 = 5792;
-    private static final int BITBYTE_LATCH_TS_SUB_END_9 = 5799;
-    private static final int BITBYTE_LATCH_TS_SUB_START_10 = 5808;
-    private static final int BITBYTE_LATCH_TS_SUB_END_10 = 5815;
-    private static final int BITBYTE_LATCH_UNUSED_START = 5816;
-    private static final int BITBYTE_LATCH_UNUSED_END = 6143;
 
 
     // Pseudo Range
@@ -179,21 +156,7 @@ public class Calculos {
             } else if (n2 >= UNUSED_BITBYTE_2_START && n2 <= UNUSED_BITBYTE_2_END) {
                 return -1;
             } else if (n2 >= BITBYTE_LATCH_TS_START && n2 <= BITBYTE_LATCH_TS_END) {
-                 if (n2 >= BITBYTE_LATCH_TS_SUB_START_1 && n2 <= BITBYTE_LATCH_TS_SUB_END_1) result = (n2 + BITBYTE_LATCH_TS_OFFSET);
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_2 && n2 <= BITBYTE_LATCH_TS_SUB_END_2) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 8;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_3 && n2 <= BITBYTE_LATCH_TS_SUB_END_3) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 16;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_4 && n2 <= BITBYTE_LATCH_TS_SUB_END_4) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 24;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_5 && n2 <= BITBYTE_LATCH_TS_SUB_END_5) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 32;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_6 && n2 <= BITBYTE_LATCH_TS_SUB_END_6) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 40;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_7 && n2 <= BITBYTE_LATCH_TS_SUB_END_7) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 48;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_8 && n2 <= BITBYTE_LATCH_TS_SUB_END_8) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 56;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_9 && n2 <= BITBYTE_LATCH_TS_SUB_END_9) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 80;
-                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_10 && n2 <= BITBYTE_LATCH_TS_SUB_END_10) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 88;
-                 else if (n2 >= BITBYTE_LATCH_UNUSED_START && n2 <= BITBYTE_LATCH_UNUSED_END) {
-                    return -1;
-                 } else {
-                    return -1;
-                 }
+                result = calculaLatchComTimestamp(n2);
             } else if (n2 >= UNUSED_BITBYTE_3_START && n2 <= UNUSED_BITBYTE_3_END) {
                 return -1;
             } else if (n2 >= PSEUDO_RANGE_START && n2 <= PSEUDO_RANGE_END) {
@@ -207,6 +170,23 @@ public class Calculos {
         } catch (NumberFormatException erro) {
             return -1;
         }
+    }
+
+    private static int calculaLatchComTimestamp(int n2) {
+        if ((n2 % 16) > 7) { // Check for unused gaps
+            return -1;
+        }
+
+        int block = (n2 - BITBYTE_LATCH_TS_START) / 16;
+        int offset = 0;
+
+        if (block >= 10) { // Special cases for blocks 10 and 11
+            offset = (2 * block) + (2 * (block - 9));
+        } else {
+            offset = 8 * block;
+        }
+
+        return (n2 + BITBYTE_LATCH_TS_OFFSET) - offset;
     }
 
     public static int calcula_raw(String tvmin) {
