@@ -108,3 +108,61 @@ Notas de release:
 - Gradle (Java 25):
   - `gradle build`, `gradle test`, `gradle run`
   - Em ambientes restritos (como contêineres sem nativo), o Gradle pode falhar por `libnative-platform`; no ambiente local/CI roda normalmente.
+
+## Guia Completo de Uso e Build Local (macOS, Debian/Ubuntu, Windows)
+
+- Pré‑requisitos gerais
+  - JDK 25 (Temurin, Zulu ou Oracle). Verifique com: `java -version`.
+  - Gradle 8/9 (opcional; você pode usar apenas o JDK + `javac/jar`).
+
+- macOS (arm64 Apple Silicon e x64 Intel)
+  - Instalar JDK: `brew install --cask temurin` (ou Temurin 25 específico se necessário)
+  - Instalar Gradle: `brew install gradle`
+  - Compilar: `gradle clean build`
+  - Executar: `gradle run` ou `java -jar build/libs/BiByte-<versao>.jar`
+  - Empacotar (opcional, nativo) via `jpackage` (requer JDK com `jpackage`):
+    - `jpackage --type dmg --name BiByte --app-version <versao> --input build/libs --main-jar BiByte-<versao>.jar --main-class bitbyte.MyJFrame --dest out/mac --icon process-icon1.ico`
+  - Observação: o JAR é multiplataforma e roda tanto em arm64 quanto em x64 desde que haja JVM compatível instalada.
+
+- Debian/Ubuntu (amd64 e arm64)
+  - Instalar JDK: `sudo apt-get update && sudo apt-get install -y temurin-25-jdk` (ou openjdk-25-jdk quando disponível)
+  - Instalar Gradle (opcional): `sudo apt-get install -y gradle` (ou via SDKMAN)
+  - Compilar: `gradle clean build`
+  - Executar: `gradle run` ou `java -jar build/libs/BiByte-<versao>.jar`
+  - Empacotar (opcional) via `jpackage`:
+    - `.deb`: `jpackage --type deb --name bibyte --app-version <versao> --input build/libs --main-jar BiByte-<versao>.jar --main-class bitbyte.MyJFrame --dest out/deb --icon process-icon1.ico`
+    - `.rpm`: `jpackage --type rpm ...` (em distros RPM)
+  - Observação: use um JDK da mesma arquitetura (amd64 ou arm64) do sistema ao empacotar.
+
+- Windows (amd64 e arm64)
+  - Instalar JDK: via winget/Chocolatey ou installer Temurin para Windows
+  - Instalar Gradle (opcional): `choco install gradle` ou usar apenas o JDK
+  - Compilar: `gradle clean build`
+  - Executar: `gradle run` ou `java -jar build\libs\BiByte-<versao>.jar`
+  - Empacotar (opcional):
+    - `jpackage --type msi --name BiByte --app-version <versao> --input build\libs --main-jar BiByte-<versao>.jar --main-class bitbyte.MyJFrame --dest out\win --icon process-icon1.ico`
+    - Alternativa (legado): Launch4j com `bitbyte_Launch4j.xml` (hoje preferimos `jpackage`).
+
+### Observações sobre Arquitetura (arm64 vs amd64)
+- O JAR (bytecode Java) é multiplataforma. O mesmo artefato roda em qualquer SO/arquitetura com JVM compatível.
+- Para empacotamento nativo (`jpackage`), use um JDK da mesma arquitetura do sistema alvo (ex.: empacotar `msi` arm64 no Windows arm64).
+- Cross‑empacotamento completo não é suportado pelo `jpackage` (ex.: gerar `.msi` no Linux). Se necessário, utilize VMs/containers da plataforma alvo (QEMU/UTM/VMware) e execute os comandos locais lá.
+
+### Build 100% Offline
+- Primeiro build pode baixar dependências (JUnit). Após cache local, use `gradle --offline build`.
+- Alternativa sem Gradle (apenas JDK):
+  - Compilar: `javac -d out $(find src -name "*.java")`
+  - Empacotar JAR com Manifest (Main-Class setada em Gradle; para manual, crie `MANIFEST.MF` com `Main-Class: bitbyte.MyJFrame`):
+    - `jar cfm BiByte-manual.jar MANIFEST.MF -C out .`
+
+## Detalhes Retroativos (v1.0.0 e v1.1.0)
+
+- v1.0.0 (Ant/JDK7)
+  - Build: `ant jar` → `dist/Bitbyte.jar`
+  - Empacotamento Windows: Launch4j (`bitbyte_Launch4j.xml`).
+  - Estrutura: `src/`, `test/`, `dist/`, `nbproject/`.
+
+- v1.1.0 (Refactor + Tests, Ant/JDK7)
+  - Mudanças funcionais: refinos na UI, lógica de conversão mais pura, primeiros testes unitários.
+  - Build: `ant jar`.
+  - Execução: `java -jar dist/Bitbyte.jar`.
