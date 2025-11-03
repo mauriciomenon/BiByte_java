@@ -110,6 +110,42 @@ Notas de release:
   - `gradle build`, `gradle test`, `gradle run`
   - Em ambientes restritos (como contêineres sem nativo), o Gradle pode falhar por `libnative-platform`; no ambiente local/CI roda normalmente.
 
+## Guia Rápido: Versões x Builds (sem confusão)
+
+- v1.0.x e v1.1.x
+  - Ferramenta: Ant (NetBeans opcional)
+  - Java: 7 (histórico) | compatível local com 25 usando Ant simples
+  - NetBeans: NÃO é obrigatório (apenas se quiser abrir o projeto nele)
+  - Comando (direto): `ant jar` → `dist/Bitbyte.jar`
+  - Observação: arquivos `nbproject/` existem para compatibilidade; build direto via Ant é preferível.
+
+- v1.8.x e v1.9.0
+  - Ferramenta: Ant (NetBeans opcional)
+  - Java: 17 (no histórico), hoje compila em 25
+  - NetBeans: NÃO é obrigatório
+  - Comando (direto): `ant clean jar` → `dist/Bitbyte.jar`
+
+- v1.9.1, v1.9.2, v1.9.3
+  - Ferramenta: Gradle (principal) | Ant ainda disponível
+  - Java: 25
+  - NetBeans: NÃO é obrigatório
+  - Comandos (direto):
+    - Gradle: `gradle build` | `gradle run` | `gradle test`
+    - Ant: `ant clean jar`
+
+- v2.0.x (principal atual)
+  - Ferramenta: Gradle (recomendado) | Ant legado mantido
+  - Java: 25
+  - NetBeans: NÃO é obrigatório (encorajado build direto via Gradle/Ant)
+  - Comandos (direto):
+    - Gradle: `gradle build` | `gradle run` | `gradle test`
+    - Ant: `ant clean jar`
+
+Notas importantes:
+- NetBeans é opcional e mantido por compatibilidade/histórico; a forma direta (linha de comando) é recomendada.
+- O mesmo JAR roda em macOS/Linux/Windows com uma JVM compatível.
+- Empacotamento nativo via `jpackage` está documentado na seção “Guia Completo de Uso e Build Local”.
+
 ## Guia Completo de Uso e Build Local (macOS, Debian/Ubuntu, Windows)
 
 - Pré‑requisitos gerais
