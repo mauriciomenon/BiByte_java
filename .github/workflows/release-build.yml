@@ -3,6 +3,9 @@ name: Build and Attach Release Artifacts
 on:
   release:
     types: [published]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
   build-release:
@@ -17,7 +20,9 @@ jobs:
         id: plan
         run: |
           TAG="${{ github.event.release.tag_name }}"
+          if [ -z "$TAG" ]; then TAG="${GITHUB_REF_NAME}"; fi
           echo "Tag is $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
           if [[ "$TAG" =~ ^v1\.0\..* || "$TAG" =~ ^v1\.1\..* ]]; then
             echo "build_system=ant" >> $GITHUB_OUTPUT
             echo "java=8" >> $GITHUB_OUTPUT
@@ -50,12 +55,26 @@ jobs:
         if: steps.plan.outputs.build_system == 'gradle'
         uses: gradle/gradle-build-action@v3
         with:
-          arguments: build
+          arguments: build -PprojVersion=${{ steps.plan.outputs.tag }}
 
-      - name: Upload release assets
+      - name: Generate release notes (optional)
+        run: |
+          TAG='${{ steps.plan.outputs.tag }}'
+          cat > RELEASE_NOTES.md << EOF
+          Release ${TAG}
+          
+          Build system: ${{ steps.plan.outputs.build_system }}
+          Java: ${{ steps.plan.outputs.java }}
+          
+          See README for version history and usage.
+          EOF
+
+      - name: Create/Upload release assets
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.plan.outputs.tag }}
           files: ${{ steps.plan.outputs.artifact }}
+          generate_release_notes: true
+          body_path: RELEASE_NOTES.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

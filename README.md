@@ -62,3 +62,16 @@ Após migração para Gradle (1.9.1+ até 2.0.0):
 2. Atualizar Ant para Java 17 e validar build (v1.9.0).
 3. Introduzir Gradle (Java 17), JUnit 5 e testes (v1.9.1+).
 4. Migrar totalmente para Gradle e remover Ant (v2.0.0).
+
+## Releases e Artefatos
+
+- Este repositório usa GitHub Actions para anexar JARs compilados automaticamente aos Releases.
+- Como funciona:
+  - Ao publicar um Release (menu Releases do GitHub) para um tag específico, a ação compila e anexa o JAR.
+  - Tags suportados:
+    - v1.0.x e v1.1.x: build via Ant em Java 8 (gera `dist/Bitbyte.jar`).
+    - v1.8.x e v1.9.0: build via Ant em Java 17 (gera `dist/Bitbyte.jar`).
+    - v1.9.1+ e v2.x: build via Gradle em Java 25 (gera `build/libs/*.jar`).
+- Para Releases anteriores (ex.: v1.0.0 e v1.1.0):
+  1. Crie um Release para cada tag (v1.0.0, v1.1.0) pelo GitHub.
+  2. A action irá compilar e anexar o JAR automaticamente.
