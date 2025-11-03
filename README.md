@@ -75,3 +75,36 @@ Após migração para Gradle (1.9.1+ até 2.0.0):
 - Para Releases anteriores (ex.: v1.0.0 e v1.1.0):
   1. Crie um Release para cada tag (v1.0.0, v1.1.0) pelo GitHub.
   2. A action irá compilar e anexar o JAR automaticamente.
+
+## Resumo das Tags
+
+- v1.0.0, v1.1.0 (legado Ant/JDK7)
+- v1.8.0, v1.9.0, v1.9.1, v1.9.2, v1.9.3
+- v2.0.0, v2.0.1, v2.0.2
+
+As tags disparam o workflow e geram releases com JAR anexado conforme a estratégia do tag.
+
+Notas de release:
+- Curadas para v1.0.0 e v1.1.0 (com o conteúdo definido para essas versões).
+- Genéricas e consistentes para as demais versões.
+
+## CI (GitHub Actions)
+
+- Workflow: `.github/workflows/release-build.yml`
+- Dispara em:
+  - `release` (published)
+  - push de tags `v*`
+- Estratégia por tag:
+  - v1.0.x e v1.1.x → Ant + Java 8 → `dist/Bitbyte.jar`
+  - v1.8.x e v1.9.0 → Ant + Java 17 → `dist/Bitbyte.jar`
+  - v1.9.1+ e v2.x → Gradle + Java 25 → `build/libs/*.jar`
+- Para Gradle, a versão do JAR é ajustada com o próprio tag via `-PprojVersion=<tag>`.
+- Publica/atualiza release e anexa artefatos automaticamente.
+
+## Builds Locais
+
+- Ant (Java 25): validado
+  - `ant clean jar` → sucesso (gera `dist/Bitbyte.jar`).
+- Gradle (Java 25):
+  - `gradle build`, `gradle test`, `gradle run`
+  - Em ambientes restritos (como contêineres sem nativo), o Gradle pode falhar por `libnative-platform`; no ambiente local/CI roda normalmente.
