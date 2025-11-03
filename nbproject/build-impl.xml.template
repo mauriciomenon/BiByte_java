@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template placeholder for NetBeans-generated build-impl.xml.
+     NetBeans will normally generate this file. If you need a minimal
+     setup, you can import the project-level build.xml instead. -->
+<project name="nb-build-impl-template" default="default" basedir="..">
+    <import file="build.xml"/>
+    <target name="default" depends="jar"/>
+</project>
+
