@@ -6,11 +6,8 @@ plugins {
 group = 'br.com.bibyte'
 version = '1.9.1'
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
-}
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
@@ -59,4 +56,3 @@ sourceSets {
         }
     }
 }
-
