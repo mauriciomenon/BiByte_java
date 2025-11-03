@@ -1,63 +1,149 @@
 package operacoes;
 
-import javax.swing.JOptionPane;
-
 public class Calculos {
 
+    //<editor-fold defaultstate="collapsed" desc="Constants for calcula_1 (PTNO -> BitByte)">
+    private static final int PTNO_MAX_INPUT = 36096;
+
+    // SOSTAT Range (Analog points)
+    private static final int SOSTAT_RANGE_START = 0;
+    private static final int SOSTAT_RANGE_END = 2047;
+
+    // 2-Way without Timestamp Range
+    private static final int PTNO_2W_NO_TS_START = 10000;
+    private static final int PTNO_2W_NO_TS_END = 11023;
+    private static final int PTNO_2W_NO_TS_OFFSET = 10000;
+
+    // 2-Way with Timestamp Range
+    private static final int PTNO_2W_TS_START = 15000;
+    private static final int PTNO_2W_TS_END = 16023;
+    private static final int PTNO_2W_TS_OFFSET = 15000;
+    private static final int PTNO_2W_TS_RESULT_OFFSET = 2048;
+
+
+    // 4-Way with Timestamp Range
+    private static final int PTNO_4W_TS_START = 25000;
+    private static final int PTNO_4W_TS_END = 25063;
+    private static final int PTNO_4W_TS_OFFSET = 25000;
+    private static final int PTNO_4W_TS_RESULT_OFFSET = 4608;
+
+
+    // Latch with Timestamp Range
+    private static final int PTNO_LATCH_TS_START = 36000;
+    private static final int PTNO_LATCH_TS_END = 36063;
+    private static final int PTNO_LATCH_TS_OFFSET = 36000;
+    private static final int PTNO_LATCH_TS_RESULT_OFFSET = 5632;
+
+
+    // Partial Latch with Timestamp Range
+    private static final int PTNO_LATCH_TS_PARTIAL_START = 36088;
+    private static final int PTNO_LATCH_TS_PARTIAL_END = 36095;
+    private static final int PTNO_LATCH_TS_PARTIAL_OFFSET = 36064;
+    private static final int PTNO_LATCH_TS_PARTIAL_RESULT_OFFSET = 5760;
+
+    // Unused ranges for PTNO
+    private static final int UNUSED_PTNO_1_START = 2048;
+    private static final int UNUSED_PTNO_1_END = 9999;
+    private static final int UNUSED_PTNO_2_START = 11024;
+    private static final int UNUSED_PTNO_2_END = 14999;
+    private static final int UNUSED_PTNO_3_START = 16024;
+    private static final int UNUSED_PTNO_3_END = 24999;
+    private static final int UNUSED_PTNO_4_START = 25064;
+    private static final int UNUSED_PTNO_4_END = 35999;
+    private static final int UNUSED_PTNO_5_START = 36064;
+    private static final int UNUSED_PTNO_5_END = 36087;
+
+
+    // Common calculation constants
+    private static final int DIVISOR_8 = 8;
+    private static final int MULTIPLIER_16 = 16;
+    private static final int MULTIPLIER_2 = 2;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="Constants for calcula_2 (BitByte -> PTNO)">
+    private static final int BITBYTE_MAX_INPUT = 8192;
+
+    // 2-Way without Timestamp Range for BitByte
+    private static final int BITBYTE_2W_NO_TS_START = 0;
+    private static final int BITBYTE_2W_NO_TS_END = 2047;
+    private static final int BITBYTE_2W_NO_TS_OFFSET = 10000;
+
+    // 2-Way with Timestamp Range for BitByte
+    private static final int BITBYTE_2W_TS_START = 2048;
+    private static final int BITBYTE_2W_TS_END = 4095;
+    private static final int BITBYTE_2W_TS_OFFSET = 27952;
+
+
+    // 4-Way with Timestamp Range for BitByte
+    private static final int BITBYTE_4W_TS_START = 4608;
+    private static final int BITBYTE_4W_TS_END = 5119;
+    private static final int BITBYTE_4W_TS_OFFSET = 20392;
+
+
+    // Latch with Timestamp Range for BitByte
+    private static final int BITBYTE_LATCH_TS_START = 5632;
+    private static final int BITBYTE_LATCH_TS_END = 6143;
+    private static final int BITBYTE_LATCH_TS_OFFSET = 30368;
+    // Sub-ranges
+    private static final int BITBYTE_LATCH_TS_SUB_START_1 = 5632;
+    private static final int BITBYTE_LATCH_TS_SUB_END_1 = 5639;
+    private static final int BITBYTE_LATCH_TS_SUB_START_2 = 5648;
+    private static final int BITBYTE_LATCH_TS_SUB_END_2 = 5655;
+    private static final int BITBYTE_LATCH_TS_SUB_START_3 = 5664;
+    private static final int BITBYTE_LATCH_TS_SUB_END_3 = 5671;
+    private static final int BITBYTE_LATCH_TS_SUB_START_4 = 5680;
+    private static final int BITBYTE_LATCH_TS_SUB_END_4 = 5687;
+    private static final int BITBYTE_LATCH_TS_SUB_START_5 = 5696;
+    private static final int BITBYTE_LATCH_TS_SUB_END_5 = 5703;
+    private static final int BITBYTE_LATCH_TS_SUB_START_6 = 5712;
+    private static final int BITBYTE_LATCH_TS_SUB_END_6 = 5719;
+    private static final int BITBYTE_LATCH_TS_SUB_START_7 = 5728;
+    private static final int BITBYTE_LATCH_TS_SUB_END_7 = 5735;
+    private static final int BITBYTE_LATCH_TS_SUB_START_8 = 5744;
+    private static final int BITBYTE_LATCH_TS_SUB_END_8 = 5751;
+    private static final int BITBYTE_LATCH_TS_SUB_START_9 = 5792;
+    private static final int BITBYTE_LATCH_TS_SUB_END_9 = 5799;
+    private static final int BITBYTE_LATCH_TS_SUB_START_10 = 5808;
+    private static final int BITBYTE_LATCH_TS_SUB_END_10 = 5815;
+    private static final int BITBYTE_LATCH_UNUSED_START = 5816;
+    private static final int BITBYTE_LATCH_UNUSED_END = 6143;
+
+
+    // Pseudo Range
+    private static final int PSEUDO_RANGE_START = 7000;
+    private static final int PSEUDO_RANGE_END = 8192;
+
+    // Unused Ranges
+    private static final int UNUSED_BITBYTE_1_START = 4096;
+    private static final int UNUSED_BITBYTE_1_END = 4607;
+    private static final int UNUSED_BITBYTE_2_START = 5120;
+    private static final int UNUSED_BITBYTE_2_END = 5631;
+    private static final int UNUSED_BITBYTE_3_START = 6144;
+    private static final int UNUSED_BITBYTE_3_END = 6999;
+    //</editor-fold>
+
+
     public static int calcula_1(String t1) {
-        int n1 = 0, result = 0, error = 0;
+        int n1;
+        int result = 0;
+
         try {
             n1 = Integer.parseInt(t1);
 
-            if (n1 >= 0 && n1 <= 36096) {
-
-                if (n1 >= 0 && n1 <= 2047) {      //2W without TimeStamp
-                    result = n1;
-                    String message = String.format("Calculadora para SOSTAT, verifique a SOANLG para pontos analógicos");
-                    JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.ERROR_MESSAGE);
-                    error = 0;
-                }
-
-                if (n1 >= 10000 && n1 <= 11023) {      //2W without TimeStamp
-                    result = ((n1 - 10000) * 2);
-                    JOptionPane.showMessageDialog(null, "Resultado para um ponto 2WAY sem TimeStamp");
-                    error = 0;
-                }
-
-                if (n1 >= 15000 && n1 <= 16023) {      //2W with TimeStamp
-                    result = (((n1 - 15000) * 2) + 2048);
-                    error = 0;
-                }                                                                   //intervalo entre 16025 e 16814 normalmente SCC (BD SCADA)
-
-                if (n1 >= 25000 && n1 <= 25063) {         //4W with TimeStamp       //25063 <-> 4727 (bloco 5)
-                    result = (((n1 - 25000) / 8) * 16) + (((n1 - 25000) % 8) + 4608);
-                    error = 0;
-                }
-
-                if (n1 >= 36000 && n1 <= 36063) {        //Latch with TimeStamp     //36095 <-> 5815 (bloco 5)
-                    result = (((n1 - 36000) / 8) * 16) + (((n1 - 36000) % 8) + 5632);
-                    error = 0;
-                }
-
-                if (n1 >= 36088 && n1 <= 36095) {        //Latch with TimeStamp     //36095 <-> 5815 (bloco 6, parcial)
-                    result = (((n1 - 36064) / 8) * 16) + (((n1 - 36064) % 8) + 5760);
-                    JOptionPane.showMessageDialog(null, result);
-                    error = 0;
-                }
-
-                if ((n1 >= 2048 && n1 <= 9999)|| (n1 >= 11024 && n1 <= 14999) || (n1 >= 16024 && n1 <= 24999) || (n1 >= 25064 && n1 <= 35999) || (n1 >= 36064 && n1 <= 36087)) {
-                    error = 1;
-                }
-            }
-
-            if (n1 < 0 || n1 > 36096) {
-                error = 1;
-            }
-
-            if (error == 1) {
-                String message = String.format("Verifique valores e intervalos válidos na documentação");
-                JOptionPane.showMessageDialog(null, message, "Erro:", JOptionPane.ERROR_MESSAGE);
-                result = 0;
+            if (n1 >= SOSTAT_RANGE_START && n1 <= SOSTAT_RANGE_END) {
+                result = n1;
+            } else if (n1 >= PTNO_2W_NO_TS_START && n1 <= PTNO_2W_NO_TS_END) {
+                result = ((n1 - PTNO_2W_NO_TS_OFFSET) * MULTIPLIER_2);
+            } else if (n1 >= PTNO_2W_TS_START && n1 <= PTNO_2W_TS_END) {
+                result = (((n1 - PTNO_2W_TS_OFFSET) * MULTIPLIER_2) + PTNO_2W_TS_RESULT_OFFSET);
+            } else if (n1 >= PTNO_4W_TS_START && n1 <= PTNO_4W_TS_END) {
+                result = (((n1 - PTNO_4W_TS_OFFSET) / DIVISOR_8) * MULTIPLIER_16) + (((n1 - PTNO_4W_TS_OFFSET) % DIVISOR_8) + PTNO_4W_TS_RESULT_OFFSET);
+            } else if (n1 >= PTNO_LATCH_TS_START && n1 <= PTNO_LATCH_TS_END) {
+                result = (((n1 - PTNO_LATCH_TS_OFFSET) / DIVISOR_8) * MULTIPLIER_16) + (((n1 - PTNO_LATCH_TS_OFFSET) % DIVISOR_8) + PTNO_LATCH_TS_RESULT_OFFSET);
+            } else if (n1 >= PTNO_LATCH_TS_PARTIAL_START && n1 <= PTNO_LATCH_TS_PARTIAL_END) {
+                result = (((n1 - PTNO_LATCH_TS_PARTIAL_OFFSET) / DIVISOR_8) * MULTIPLIER_16) + (((n1 - PTNO_LATCH_TS_PARTIAL_OFFSET) % DIVISOR_8) + PTNO_LATCH_TS_PARTIAL_RESULT_OFFSET);
+            } else {
+                return -1;
             }
 
             return result;
@@ -67,152 +153,53 @@ public class Calculos {
     }
 
     public static int calcula_2(String t2) {
-        int n2 = 0, result = 0, error = 0;
+        int n2;
+        int result = 0;
 
         try {
             n2 = Integer.parseInt(t2);
 
-            if (n2 >= 0 && n2 <= 8192) {                                        //intervalo definido para SOSTAT.PNTNO
-
-                if (n2 >= 0 && n2 <= 2047) {                                    //2WAY without TimeStamp
-                    result = ((n2 / 2) + 10000);
-                    String message = String.format("Cuidado, pode ser ponto Analógico");
-                    JOptionPane.showMessageDialog(null, message);
+            if (n2 >= BITBYTE_2W_NO_TS_START && n2 <= BITBYTE_2W_NO_TS_END) {
+                result = ((n2 / 2) + BITBYTE_2W_NO_TS_OFFSET);
+            } else if (n2 >= BITBYTE_2W_TS_START && n2 <= BITBYTE_2W_TS_END) {
+                if (n2 % 2 != 0) {
+                    return -1;
+                } else {
+                    result = ((n2 + BITBYTE_2W_TS_OFFSET) / 2);
                 }
-
-                if (n2 >= 2048 && n2 <= 4095) {                                 //2WAY with TimeStamp
-
-                    if (n2 % 2 != 0) {
-                        String message = String.format("PTNO deve ser um numero par");
-                        JOptionPane.showMessageDialog(null, message);
-                        error = 1;
-                    } else {
-                        result = ((n2 + 27952) / 2);
-                    }
+            } else if (n2 >= UNUSED_BITBYTE_1_START && n2 <= UNUSED_BITBYTE_1_END) {
+                return -1;
+            } else if (n2 >= BITBYTE_4W_TS_START && n2 <= BITBYTE_4W_TS_END) {
+                if ((n2 % 16) > 7) { // Check for unused gaps
+                    return -1;
+                } else {
+                    int block = (n2 - BITBYTE_4W_TS_START) / 16;
+                    result = (n2 + BITBYTE_4W_TS_OFFSET) - (8 * block);
                 }
-
-                if (n2 >= 4096 && n2 <= 4607) {                                 //Intervalo não utilizado
-                    String message = String.format("Intervalo não utilizado");
-                    JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.WARNING_MESSAGE);
-                    error = 1;
-                }
-
-                if (n2 >= 4608 && n2 <= 5119) {                                 //4WAY with TimeStamp 
-
-                    if (n2 >= 4608 && n2 <= 4615) {
-                        result = (n2 + 20392);
-                    }
-
-                    if (n2 >= 4624 && n2 <= 4631) {
-                        result = (n2 + 20392) - 8;
-                    }
-
-                    if (n2 >= 4640 && n2 <= 4647) {
-                        result = (n2 + 20392) - 16;
-                    }
-
-                    if (n2 >= 4656 && n2 <= 4663) {
-                        result = (n2 + 20392) - 24;
-                    }
-
-                    if (n2 >= 4672 && n2 <= 4679) {
-                        result = (n2 + 20392) - 32;
-                    }
-
-                    if (n2 >= 4688 && n2 <= 4695) {
-                        result = (n2 + 20392) - 40;
-                    }
-
-                    if (n2 >= 4696 && n2 <= 5119) {                                 //Intervalo não utilizado
-                        String message = String.format("Intervalo não utilizado atualmente");
-                        JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.WARNING_MESSAGE);
-                    }
-
-                    if ((n2 >= 4616 && n2 <= 4623) || (n2 >= 4632 && n2 <= 4639) || (n2 >= 4648 && n2 <= 4655) || (n2 >= 4664 && n2 <= 4671) || (n2 >= 4680 && n2 <= 4687)) {
-                        error = 1;
-                    }
-                }
-
-                if (n2 >= 5120 && n2 <= 5631) {                                 //Intervalo não utilizado
-                    String message = String.format("Intervalo não utilizado ");
-                    JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.WARNING_MESSAGE);
-                    error = 1;
-                }
-
-
-                if (n2 >= 5632 && n2 <= 6143) {                                 //LATCH with TimeStamp
-
-                    if (n2 >= 5632 && n2 <= 5639) {
-                        result = (n2 + 30368);
-                    }
-
-                    if (n2 >= 5648 && n2 <= 5655) {
-                        result = (n2 + 30368) - 8;
-                    }
-
-                    if (n2 >= 5664 && n2 <= 5671) {
-                        result = (n2 + 30368) - 16;
-                    }
-
-                    if (n2 >= 5680 && n2 <= 5687) {
-                        result = (n2 + 30368) - 24;
-                    }
-
-                    if (n2 >= 5696 && n2 <= 5703) {
-                        result = (n2 + 30368) - 32;
-                    }
-
-                    if (n2 >= 5712 && n2 <= 5719) {
-                        result = (n2 + 30368) - 40;
-                    }
-
-                    if (n2 >= 5728 && n2 <= 5735) {
-                        result = (n2 + 30368) - 48;
-                    }
-
-                    if (n2 >= 5744 && n2 <= 5751) {
-                        result = (n2 + 30368) - 56;
-                    }
-
-                    if (n2 >= 5792 && n2 <= 5799) {
-                        result = (n2 + 30368) - 80;
-                    }
-
-                    if (n2 >= 5808 && n2 <= 5815) {
-                        result = (n2 + 30368) - 88;
-                    }
-
-                    if ((n2 >= 5640 && n2 <= 5647) || (n2 >= 5656 && n2 <= 5663) || (n2 >= 5672 && n2 <= 5681) || (n2 >= 5688 && n2 <= 5695) || (n2 >= 5704 && n2 <= 5711) || (n2 >= 5720 && n2 <= 5727) || (n2 >= 5736 && n2 <= 5743) || (n2 >= 5752 && n2 <= 5791) || (n2 >= 5800 && n2 <= 5807)) {
-                        error = 1;
-                    }
-
-                    if (n2 >= 5816 && n2 <= 6143) {                             //Intervalo não utilizado
-                        String message = String.format("Intervalo não utilizado atualmente");
-                        JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.WARNING_MESSAGE);
-                    }
-
-                }
-
-                if (n2 >= 6144 && n2 <= 6999) {                                 //Intervalo não utilizado
-                    String message = String.format("Intervalo não utilizado ");
-                    JOptionPane.showMessageDialog(null, message, "Erro", JOptionPane.WARNING_MESSAGE);
-                }
-
-                if (n2 >= 7000 && n2 <= 8192) {                                 //PSEUDO
-                    result = 0;
-                    String message = String.format("Todo Pseudo point tem BITBYTE nulo");
-                    JOptionPane.showMessageDialog(null, message, "Atenção:", JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-
-            if (n2 < 0 || n2 > 8192) {
-                error = 1;
-            }
-
-            if (error == 1) {
-                String message = String.format("Verifique valores e intervalos válidos na documentação");
-                JOptionPane.showMessageDialog(null, message, "Erro:", JOptionPane.ERROR_MESSAGE);
+            } else if (n2 >= UNUSED_BITBYTE_2_START && n2 <= UNUSED_BITBYTE_2_END) {
+                return -1;
+            } else if (n2 >= BITBYTE_LATCH_TS_START && n2 <= BITBYTE_LATCH_TS_END) {
+                 if (n2 >= BITBYTE_LATCH_TS_SUB_START_1 && n2 <= BITBYTE_LATCH_TS_SUB_END_1) result = (n2 + BITBYTE_LATCH_TS_OFFSET);
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_2 && n2 <= BITBYTE_LATCH_TS_SUB_END_2) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 8;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_3 && n2 <= BITBYTE_LATCH_TS_SUB_END_3) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 16;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_4 && n2 <= BITBYTE_LATCH_TS_SUB_END_4) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 24;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_5 && n2 <= BITBYTE_LATCH_TS_SUB_END_5) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 32;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_6 && n2 <= BITBYTE_LATCH_TS_SUB_END_6) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 40;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_7 && n2 <= BITBYTE_LATCH_TS_SUB_END_7) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 48;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_8 && n2 <= BITBYTE_LATCH_TS_SUB_END_8) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 56;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_9 && n2 <= BITBYTE_LATCH_TS_SUB_END_9) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 80;
+                 else if (n2 >= BITBYTE_LATCH_TS_SUB_START_10 && n2 <= BITBYTE_LATCH_TS_SUB_END_10) result = (n2 + BITBYTE_LATCH_TS_OFFSET) - 88;
+                 else if (n2 >= BITBYTE_LATCH_UNUSED_START && n2 <= BITBYTE_LATCH_UNUSED_END) {
+                    return -1;
+                 } else {
+                    return -1;
+                 }
+            } else if (n2 >= UNUSED_BITBYTE_3_START && n2 <= UNUSED_BITBYTE_3_END) {
+                return -1;
+            } else if (n2 >= PSEUDO_RANGE_START && n2 <= PSEUDO_RANGE_END) {
                 result = 0;
+            } else {
+                return -1;
             }
 
             return result;
@@ -223,20 +210,12 @@ public class Calculos {
     }
 
     public static int calcula_raw(String tvmin) {
-        int tr = 1, bias = 0, scale = 0, error = 0, result =0;
-        int vmin = 0, vmax = 0;
+        int vmin;
         try {
             vmin = Integer.parseInt(tvmin);
-                result = vmin;
-                String message = String.format("Sem Erro");
-                JOptionPane.showMessageDialog(null, message, "Sem Erro ", JOptionPane.ERROR_MESSAGE);
-                error = 0;
-
-            return result;
+            return vmin;
         } catch (NumberFormatException erro) {
             return -1;
         }
     }
-    
 }
-
