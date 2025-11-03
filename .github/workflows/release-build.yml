@@ -60,14 +60,59 @@ jobs:
       - name: Generate release notes (optional)
         run: |
           TAG='${{ steps.plan.outputs.tag }}'
-          cat > RELEASE_NOTES.md << EOF
+          if [ "$TAG" = "v1.0.0" ]; then
+            cat > RELEASE_NOTES.md << 'EOF'
+          # BiByte Conversor (v1.0.0)
+
+          BiByte e uma ferramenta de desktop desenvolvida em Java para auxiliar engenheiros de automacao e controle que trabalham com sistemas SCADA, especificamente com o protocolo IEC-870-5. A principal funcao da aplicacao e converter valores entre o formato "BitByte" e "PTNO", alem de fornecer tabelas de consulta rapida para localizacao de UTRs (Unidades Terminais Remotas) e codigos de cores de cabos.
+
+          ## Visao Geral da Arquitetura (Versao 1.0.0 - Legado)
+
+          A versao original do projeto foi desenvolvida com as seguintes tecnologias:
+
+          - Java: Versao 1.7
+          - Build System: Apache Ant
+          - IDE: NetBeans
+          - UI: Java Swing
+          - Empacotamento: Launch4j para a criacao de um executavel `.exe` para Windows.
+
+          ## Estrutura do Projeto
+
+          - src/: Codigo-fonte principal da aplicacao.
+          - test/: Testes unitarios com JUnit.
+          - dist/: Contem o JAR compilado e a documentacao Javadoc.
+          - nbproject/: Arquivos de configuracao do projeto NetBeans.
+          - *.xml: Arquivos de configuracao do Ant (build.xml) e Launch4j.
+
+          ## Como Compilar e Executar
+
+          - Requisitos: JDK 7 e Ant
+          - Build: ant jar
+          - Saida: dist/Bitbyte.jar
+          EOF
+          elif [ "$TAG" = "v1.1.0" ]; then
+            cat > RELEASE_NOTES.md << 'EOF'
+          # BiByte Conversor (v1.1.0)
+
+          Refatoracao de qualidade de codigo e adicao de testes.
+
+          - UI (MyJFrame.java): renomeacao de campos (t1/t2/t3/t4 -> bitByteInput/ptnoInput/ptnoOutput/bitByteOutput), remocao de boilerplate, lambdas no EventQueue, tratamento de excecoes unificado.
+          - Listener: MeuListener ajustado para novos campos e errorLabel.
+          - Logica (Calculos.java): funcoes mais puras, sem JOptionPane.
+          - Testes: test/operacoes/CalculosTest.java (JUnit 4).
+
+          Como compilar (Ant/JDK7): ant jar (gera dist/Bitbyte.jar)
+          EOF
+          else
+            cat > RELEASE_NOTES.md << EOF
           Release ${TAG}
-          
+
           Build system: ${{ steps.plan.outputs.build_system }}
           Java: ${{ steps.plan.outputs.java }}
-          
-          See README for version history and usage.
+
+          Consulte o README no tag para detalhes de versao e uso.
           EOF
+          fi
 
       - name: Create/Upload release assets
         uses: softprops/action-gh-release@v2
