@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"bitbyte"},{"l":"operacoes"},{"l":"rtu_location"},{"l":"utils"}];updateSearchResults();
