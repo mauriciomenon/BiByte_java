@@ -40,8 +40,9 @@ BiByte é uma ferramenta desktop em Java para engenheiros de automação e contr
 - v1.9.1+ (Migração Gradual para Gradle)
   - Introdução de Gradle (Java 17), ajustes de estrutura e testes (JUnit 5), documentação atualizada.
 
-- v2.0.0 (Gradle Completo)
-  - Build, testes e execução via Gradle; Ant removido.
+- v2.0.0 (Gradle como principal)
+  - Build, testes e execução via Gradle.
+  - Ant/NetBeans (legado) mantidos no repositório para compatibilidade e referência histórica.
 
 ## Como Compilar e Executar
 
