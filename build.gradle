@@ -8,7 +8,8 @@ version = (findProperty('projVersion') ?: '1.9.3')
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        def targetVer = (findProperty('javaTarget') ?: '25') as String
+        languageVersion = JavaLanguageVersion.of(Integer.parseInt(targetVer))
     }
 }
 

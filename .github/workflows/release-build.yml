@@ -57,12 +57,15 @@ jobs:
         if: steps.plan.outputs.build_system == 'ant'
         run: ant clean jar
 
-      - name: Build with Gradle
+      - name: Set up Gradle 8.10.2
         if: steps.plan.outputs.build_system == 'gradle'
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.10.2
-          arguments: build -PprojVersion=${{ steps.plan.outputs.tag }}
+
+      - name: Build with Gradle
+        if: steps.plan.outputs.build_system == 'gradle'
+        run: gradle build -PprojVersion=${{ steps.plan.outputs.tag }} -PjavaTarget=${{ steps.plan.outputs.java }}
 
       - name: Prepare latest asset name
         id: latest
