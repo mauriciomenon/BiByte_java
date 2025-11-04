@@ -37,7 +37,13 @@ jobs:
             echo "artifact=build/libs/*.jar" >> $GITHUB_OUTPUT
           fi
 
-      - name: Set up Java
+      - name: Set up Java 21 (run Gradle)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Java (toolchain target)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
