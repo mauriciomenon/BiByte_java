@@ -1,8 +1,9 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\Users\menon\Documents\NetBeansProjects\Bitbyte\dist\Bitbyte.jar</jar>
-  <outfile>C:\Users\menon\Documents\NetBeansProjects\Bitbyte\dist\Bitbyte_v3.exe</outfile>
+  <!-- Example template. Prefer using scripts/launch4j-win.ps1 which generates a temp config per VERSION. -->
+  <jar>build\libs\BiByte-DEV.jar</jar>
+  <outfile>out\win\BiByte-DEV.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
@@ -12,10 +13,11 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>C:\Users\menon\Documents\NetBeansProjects\Bitbyte\process-icon1.ico</icon>
+  <icon>process-icon1.ico</icon>
   <jre>
-    <path></path>
-    <minVersion>1.6.0_00</minVersion>
+    <!-- Portable JRE folder next to the .exe (e.g., ship a ./jre created with jlink or a JRE distro) -->
+    <path>jre</path>
+    <minVersion>1.8.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
   </jre>

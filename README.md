@@ -1,14 +1,13 @@
 # BiByte Conversor
 
+[![Latest Release](https://img.shields.io/github/v/release/mauriciomenon/BiByte_java?display_name=release)](https://github.com/mauriciomenon/BiByte_java/releases/latest)
+[![CI Status](https://github.com/mauriciomenon/BiByte_java/actions/workflows/ci.yml/badge.svg)](https://github.com/mauriciomenon/BiByte_java/actions/workflows/ci.yml)
+
 Quickstart
 - Gradle: `gradle build && gradle run`
 - Ant: `ant clean jar && java -jar dist/Bitbyte.jar`
-- Download direto: última versão pronta (JAR)
-  - `https://github.com/mauriciomenon/BiByte_java/releases/latest/download/BiByte-latest.jar`
-
-Badges
-- Latest Release: `https://img.shields.io/github/v/release/mauriciomenon/BiByte_java?display_name=release`
-- CI Status: `https://github.com/mauriciomenon/BiByte_java/actions/workflows/ci.yml/badge.svg`
+- Download direto (sempre atualizado):
+  - https://github.com/mauriciomenon/BiByte_java/releases/latest/download/BiByte-latest.jar
 
 BiByte é uma ferramenta desktop em Java para engenheiros de automação e controle que trabalham com sistemas SCADA (IEC-870-5). A aplicação converte valores entre os formatos "BitByte" e "PTNO" e oferece tabelas de consulta rápida (UTRs e códigos de cores de cabos).
 
