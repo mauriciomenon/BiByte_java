@@ -6,6 +6,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Comma-separated list of tags to (re)publish'
+        required: false
+        default: ''
 
 jobs:
   build-release:

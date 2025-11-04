@@ -1,13 +1,24 @@
 # BiByte Conversor
 
 [![Latest Release](https://img.shields.io/github/v/release/mauriciomenon/BiByte_java?display_name=release)](https://github.com/mauriciomenon/BiByte_java/releases/latest)
-[![CI Status](https://github.com/mauriciomenon/BiByte_java/actions/workflows/ci.yml/badge.svg)](https://github.com/mauriciomenon/BiByte_java/actions/workflows/ci.yml)
+![Builds](https://img.shields.io/badge/builds-local%20%2B%20on-demand-blue)
 
 Quickstart
 - Gradle: `gradle build && gradle run`
 - Ant: `ant clean jar && java -jar dist/Bitbyte.jar`
 - Download direto (sempre atualizado):
   - https://github.com/mauriciomenon/BiByte_java/releases/latest/download/BiByte-latest.jar
+  - Nota: se o link estiver 404, aguarde o pipeline publicar o Release mais recente ou use `gradle build` e rode o JAR em `build/libs/`.
+
+Sumário
+- Introdução rápida (1 minuto)
+- Histórico de versões
+- Como compilar e executar
+- Guia rápido: versões x builds
+- Empacotamento (jpackage, Launch4j)
+- JRE portátil (jlink)
+- Processo de release (rastreável)
+- Estrutura do repositório
 
 BiByte é uma ferramenta desktop em Java para engenheiros de automação e controle que trabalham com sistemas SCADA (IEC-870-5). A aplicação converte valores entre os formatos "BitByte" e "PTNO" e oferece tabelas de consulta rápida (UTRs e códigos de cores de cabos).
 
@@ -189,6 +200,7 @@ Notas importantes:
     - Gradle (um comando):
       - `gradle packageWinExe` (gera EXE auto-contido em `out\win`) — maior (inclui runtime)
       - `gradle packageWinMsi` (gera MSI auto-contido em `out\win`) — maior (inclui runtime)
+      - `gradle packageWinSlimAll` (build + jlink + Launch4j EXE “slim” em `out\win`) — pequeno + JRE portátil ao lado
     - Scripts (PowerShell):
       - EXE: `$env:VERSION="<versao>"; ./scripts/jpackage-win-exe.ps1`
       - MSI: `$env:VERSION="<versao>"; ./scripts/jpackage-win.ps1`

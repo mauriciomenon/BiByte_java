@@ -101,6 +101,36 @@ tasks.register('packageDeb', Exec) {
         '--icon', 'process-icon1.ico'
 }
 
+// Portable JRE + slim EXE (Windows, Launch4j)
+def isWindows = System.getProperty('os.name').toLowerCase().contains('win')
+
+tasks.register('jlinkWin', Exec) {
+    group = 'distribution'
+    description = 'Create portable JRE in out/win/jre (Windows) using jlink.'
+    onlyIf { isWindows }
+    environment 'JAVA_HOME', System.getenv('JAVA_HOME')
+    commandLine 'powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', './scripts/jlink-win.ps1'
+}
+
+tasks.register('packageWinExeSlim', Exec) {
+    group = 'distribution'
+    description = 'Build slim Windows EXE via Launch4j using portable JRE (out/win/jre).'
+    onlyIf { isWindows }
+    dependsOn(tasks.named('build'))
+    dependsOn(tasks.named('jlinkWin'))
+    environment 'VERSION', project.version
+    commandLine 'powershell', '-NoProfile', '-ExecutionPolicy', 'Bypass', './scripts/launch4j-win.ps1'
+}
+
+tasks.register('packageWinSlimAll') {
+    group = 'distribution'
+    description = 'One-shot: build, jlink (portable JRE), and Launch4j EXE (Windows).'
+    onlyIf { isWindows }
+    dependsOn(tasks.named('build'))
+    dependsOn(tasks.named('jlinkWin'))
+    dependsOn(tasks.named('packageWinExeSlim'))
+}
+
 sourceSets {
     main {
         java {
