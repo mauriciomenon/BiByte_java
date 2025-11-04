@@ -30,3 +30,9 @@ jobs:
         with:
           gradle-version: 8.10.2
           arguments: build
+
+      - name: Diagnostic (versions + stacktrace)
+        run: |
+          java -version
+          gradle -v
+          gradle build --stacktrace --info || true
