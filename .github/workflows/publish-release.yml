@@ -1,0 +1,44 @@
+name: Publish Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag/Versão (ex.: v2.1.0)'
+        required: true
+        default: 'v2.1.0'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find assets for tag
+        id: aset
+        run: |
+          TAG='${{ inputs.tag }}'
+          VER="${TAG#v}"
+          ASSET_DIR="release/${VER}"
+          echo "Using ${ASSET_DIR}"
+          if [ ! -d "$ASSET_DIR" ]; then
+            echo "Assets directory ${ASSET_DIR} not found" >&2
+            exit 1
+          fi
+          echo "dir=${ASSET_DIR}" >> "$GITHUB_OUTPUT"
+
+      - name: Create/Update Release and Upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          files: |
+            ${{ steps.aset.outputs.dir }}/*
+            ${{ steps.aset.outputs.dir }}/mac/*
+            ${{ steps.aset.outputs.dir }}/win/*
+            ${{ steps.aset.outputs.dir }}/deb/*
+          generate_release_notes: true
+          body_path: ${{ steps.aset.outputs.dir }}/RELEASE-NOTES-TEMPLATE.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
