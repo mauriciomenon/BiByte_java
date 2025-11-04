@@ -97,6 +97,16 @@ Após migração para Gradle (1.9.1+ até 2.0.0):
   1. Crie um Release para cada tag (v1.0.0, v1.1.0) pelo GitHub.
   2. A action irá compilar e anexar o JAR automaticamente.
 
+### Downloads (após Release)
+
+| Artefato                | Link                                                     | Como gerar local |
+|-------------------------|----------------------------------------------------------|------------------|
+| JAR mais recente        | /releases/latest/download/BiByte-latest.jar              | `gradle build` → `build/libs/` |
+| Windows EXE (slim)      | publicado no Release (se anexado)                       | `gradle packageWinSlimAll` → `out/win/*.exe` |
+| Windows MSI (auto‑cont.)| publicado no Release (se anexado)                       | `gradle packageWinMsi` → `out/win/*.msi` |
+| macOS DMG (auto‑cont.)  | publicado no Release (se anexado)                       | `gradle packageMacDmg` → `out/mac/*.dmg` |
+| Debian DEB (auto‑cont.) | publicado no Release (se anexado)                       | `gradle packageDeb` → `out/deb/*.deb` |
+
 ## Resumo das Tags
 
 | Tag(s)                         | Ferramenta | Java | Comando principal                 | Artefatos |
@@ -130,7 +140,7 @@ Após migração para Gradle (1.9.1+ até 2.0.0):
   - `gradle build`, `gradle test`, `gradle run`
   - Em ambientes restritos (como contêineres sem nativo), o Gradle pode falhar por `libnative-platform`; no ambiente local/CI roda normalmente.
 
-## Guia Rápido: Versões x Builds (sem confusão)
+## Builds TL;DR
 
 - v1.0.x e v1.1.x
   - Ferramenta: Ant (NetBeans opcional)

@@ -131,6 +131,54 @@ tasks.register('packageWinSlimAll') {
     dependsOn(tasks.named('packageWinExeSlim'))
 }
 
+// Collect local release assets into release/<version>
+tasks.register('prepareRelease') {
+    group = 'distribution'
+    description = 'Collect JAR and native packages into release/<version> with BiByte-latest.jar copy.'
+    dependsOn(tasks.named('build'))
+    doLast {
+        def ver = (project.findProperty('releaseVersion') ?: project.version).toString()
+        def dest = file("release/${ver}")
+        dest.mkdirs()
+
+        def builtJar = file("build/libs/${appName}-${project.version}.jar")
+        if (builtJar.exists()) {
+            copy { from builtJar; into dest }
+            copy { from builtJar; into dest; rename { String n -> 'BiByte-latest.jar' } }
+        }
+
+        [ 'out/win', 'out/mac', 'out/deb' ].each { p ->
+            def d = file(p)
+            if (d.exists()) {
+                copy { from d; into new File(dest, new File(p).name) }
+            }
+        }
+
+        def notes = new File(dest, 'RELEASE-NOTES-TEMPLATE.md')
+        if (!notes.exists()) {
+            notes.text = """
+            # BiByte ${ver}
+
+            ## Highlights
+            - Conversões BitByte/PTNO estáveis
+            - Empacotamento: JAR, Windows EXE/MSI, macOS DMG, Debian DEB (opcionais)
+
+            ## Artefatos
+            - JAR: BiByte-${ver}.jar
+            - Latest alias: BiByte-latest.jar
+            - Windows: out/win/* (se gerado)
+            - macOS: out/mac/* (se gerado)
+            - Debian: out/deb/* (se gerado)
+
+            ## Como usar
+            - Java: `java -jar BiByte-${ver}.jar`
+            - Windows EXE (slim): executar BiByte-${ver}.exe (requer pasta jre/ ao lado)
+            - Windows MSI/EXE (auto-contidos): instalar/rodar
+            """.stripIndent()
+        }
+    }
+}
+
 sourceSets {
     main {
         java {
