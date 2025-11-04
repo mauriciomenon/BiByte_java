@@ -196,6 +196,80 @@ Notas importantes:
       - Launch4j: `./scripts/launch4j-win.ps1` (gera .exe pequeno; requer JRE instalado no sistema ou apontar JRE embarcado no XML)
     - Observação: jpackage cria instaladores auto-contidos (sem depender de Java instalado), porém com tamanho maior.
 
+### JRE Portátil com jlink (Zerar dependência de Java instalado)
+
+- Por que: gerar um runtime Java mínimo embutido junto do executável, eliminando a necessidade de JRE no sistema.
+- Módulos típicos para Swing: `java.base, java.datatransfer, java.desktop, java.logging, java.xml, java.prefs, java.naming, jdk.unsupported`.
+- Windows (PowerShell):
+  - `JAVA_HOME="C:\\Program Files\\Eclipse Adoptium\\jdk-25"; ./scripts/jlink-win.ps1`
+  - Saída: `out\win\jre` (use com Launch4j ou jpackage)
+- macOS/Linux (bash):
+  - `JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-25.jdk/Contents/Home bash scripts/jlink-unix.sh`
+  - Saída: `out/<os>/jre`
+- Com Launch4j:
+  - O `.exe` procura `jre/` ao lado (já configurado). Ex.: `out\win\BiByte-<versao>.exe` e `out\win\jre\...`
+- Com jpackage:
+  - jpackage já embute um runtime próprio; use jlink apenas se quiser controlar módulos e tamanho manualmente.
+
+## Guia Rápido: Versões x Builds (sem confusão)
+
+- v1.0.x e v1.1.x
+  - Ferramenta: Ant (NetBeans opcional)
+  - Java: 7 (histórico) | hoje compila em 25 via Ant
+  - NetBeans: opcional; build em linha de comando é preferível
+  - Comando: `ant jar` → `dist/Bitbyte.jar`
+
+- v1.8.x e v1.9.0
+  - Ferramenta: Ant (NetBeans opcional)
+  - Java: 17 (histórico) | hoje compila em 25
+  - Comando: `ant clean jar` → `dist/Bitbyte.jar`
+
+- v1.9.1, v1.9.2, v1.9.3
+  - Ferramenta: Gradle (principal) | Ant disponível
+  - Java: 25
+  - Comandos:
+    - Gradle: `gradle build`, `gradle run`, `gradle test`
+    - Ant: `ant clean jar`
+
+- v2.0.x (principal atual)
+  - Ferramenta: Gradle (recomendado) | Ant legado mantido
+  - Java: 25
+  - Comandos:
+    - Gradle: `gradle build`, `gradle run`, `gradle test`
+    - Ant: `ant clean jar`
+
+Notas:
+- NetBeans é opcional; priorize comandos diretos.
+- O JAR roda em macOS/Linux/Windows com uma JVM compatível.
+- Empacotamento nativo via jpackage e EXE pequeno via Launch4j documentados acima.
+
+## Processo de Release (Rastreável)
+
+- Preparar versão:
+  - Atualize docs/README conforme necessário.
+  - Opcional: defina a versão no build do release via tag (o workflow envia `-PprojVersion=<tag>`).
+- Criar tag anotada:
+  - `git tag -a v2.1.0 -m "v2.1.0: documentação e empacotamento estáveis"`
+  - `git push origin refs/tags/v2.1.0`
+- Publicação automática (GitHub Actions):
+  - Para tags v1.0.x/v1.1.x → Ant/Java 8 (dist/Bitbyte.jar)
+  - v1.8.x/v1.9.0 → Ant/Java 17 (dist/Bitbyte.jar)
+  - v1.9.1+ e v2.x → Gradle/Java 25 (build/libs/*.jar)
+  - Assets anexados: JAR da versão + `BiByte-latest.jar`
+- Verificar release:
+  - Acompanhe a aba Actions/Release; o link de download do README sempre aponta ao mais recente.
+
+## Rastreabilidade e Estrutura
+
+- Build principal: `build.gradle`, `settings.gradle`, `gradle.properties`.
+- Build legado: `build.xml`, `nbproject/` (compatibilidade NetBeans preservada).
+- Scripts:
+  - jpackage: `scripts/jpackage-*.sh|ps1`
+  - launch4j: `scripts/launch4j-win.ps1`
+  - jlink: `scripts/jlink-*.sh|ps1`
+- Código-fonte: `src/` (app), `test/` (JUnit 5).
+- Ícones e XMLs: `process-icon1.ico`, `Bitbyte/bitbyte_Launch4j.xml`, `2.xml` e correlatos.
+
 ### Observações sobre Arquitetura (arm64 vs amd64)
 - O JAR (bytecode Java) é multiplataforma. O mesmo artefato roda em qualquer SO/arquitetura com JVM compatível.
 - Para empacotamento nativo (`jpackage`), use um JDK da mesma arquitetura do sistema alvo (ex.: empacotar `msi` arm64 no Windows arm64).
