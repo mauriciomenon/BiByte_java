@@ -37,13 +37,7 @@ jobs:
             echo "artifact=build/libs/*.jar" >> $GITHUB_OUTPUT
           fi
 
-      - name: Set up Java 21 (run Gradle)
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - name: Set up Java (toolchain target)
+      - name: Set up Java (runtime + toolchain)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -63,9 +57,13 @@ jobs:
         with:
           gradle-version: 8.10.2
 
-      - name: Build with Gradle
+      - name: Build with Gradle (no caches)
         if: steps.plan.outputs.build_system == 'gradle'
-        run: gradle build -PprojVersion=${{ steps.plan.outputs.tag }} -PjavaTarget=${{ steps.plan.outputs.java }}
+        run: |
+          gradle --version
+          java -version
+          gradle build -PprojVersion=${{ steps.plan.outputs.tag }} -PjavaTarget=${{ steps.plan.outputs.java }} --no-daemon --no-configuration-cache --no-build-cache --stacktrace || \
+          (sleep 5 && gradle build -PprojVersion=${{ steps.plan.outputs.tag }} -PjavaTarget=${{ steps.plan.outputs.java }} --no-daemon --no-configuration-cache --no-build-cache --stacktrace)
 
       - name: Prepare latest asset name
         id: latest
