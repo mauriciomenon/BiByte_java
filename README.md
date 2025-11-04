@@ -99,15 +99,15 @@ Após migração para Gradle (1.9.1+ até 2.0.0):
 
 ## Resumo das Tags
 
-- v1.0.0, v1.1.0 (legado Ant/JDK7)
-- v1.8.0, v1.9.0, v1.9.1, v1.9.2, v1.9.3
-- v2.0.0, v2.0.1, v2.0.2
+| Tag(s)                         | Ferramenta | Java | Comando principal                 | Artefatos |
+|--------------------------------|------------|------|-----------------------------------|-----------|
+| v1.0.0, v1.1.0                 | Ant        | 7/8  | `ant jar`                         | `dist/Bitbyte.jar` |
+| v1.8.0, v1.9.0                 | Ant        | 17   | `ant clean jar`                   | `dist/Bitbyte.jar` |
+| v1.9.1, v1.9.2, v1.9.3         | Gradle     | 25   | `gradle build`                    | `build/libs/*.jar` |
+| v2.0.0, v2.0.1, v2.0.2, v2.1.0 | Gradle     | 25   | `gradle build`                    | `build/libs/*.jar` |
 
-As tags disparam o workflow e geram releases com JAR anexado conforme a estratégia do tag.
-
-Notas de release:
-- Curadas para v1.0.0 e v1.1.0 (com o conteúdo definido para essas versões).
-- Genéricas e consistentes para as demais versões.
+- As tags disparam o workflow e geram releases com JAR anexado conforme a estratégia do tag.
+- Notas de release: curadas (v1.0.0 e v1.1.0) e genéricas nas demais.
 
 ## CI (GitHub Actions)
 
