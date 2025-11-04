@@ -208,7 +208,7 @@ Notas importantes:
       - Launch4j: `./scripts/launch4j-win.ps1` (gera .exe pequeno; requer JRE instalado no sistema ou apontar JRE embarcado no XML)
     - Observação: jpackage cria instaladores auto-contidos (sem depender de Java instalado), porém com tamanho maior.
 
-### JRE Portátil com jlink (Zerar dependência de Java instalado)
+## JRE Portátil com jlink (Zerar dependência de Java instalado)
 
 - Por que: gerar um runtime Java mínimo embutido junto do executável, eliminando a necessidade de JRE no sistema.
 - Módulos típicos para Swing: `java.base, java.datatransfer, java.desktop, java.logging, java.xml, java.prefs, java.naming, jdk.unsupported`.
