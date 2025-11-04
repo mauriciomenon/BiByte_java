@@ -187,8 +187,15 @@ Notas importantes:
   - Compilar: `gradle clean build`
   - Executar: `gradle run` ou `java -jar build\libs\BiByte-<versao>.jar`
   - Empacotar (opcional):
-    - `jpackage --type msi --name BiByte --app-version <versao> --input build\libs --main-jar BiByte-<versao>.jar --main-class bitbyte.MyJFrame --dest out\win --icon process-icon1.ico`
-    - Alternativa (legado): Launch4j com `bitbyte_Launch4j.xml` (hoje preferimos `jpackage`).
+    - Gradle (um comando):
+      - `gradle packageWinExe` (gera EXE auto-contido em `out\win`) — maior (inclui runtime)
+      - `gradle packageWinMsi` (gera MSI auto-contido em `out\win`) — maior (inclui runtime)
+    - Scripts (PowerShell):
+      - EXE: `$env:VERSION="<versao>"; ./scripts/jpackage-win-exe.ps1`
+      - MSI: `$env:VERSION="<versao>"; ./scripts/jpackage-win.ps1`
+    - Alternativa enxuta (depende de Java instalado):
+      - Launch4j: `./scripts/launch4j-win.ps1` (gera .exe pequeno; requer JRE instalado no sistema ou apontar JRE embarcado no XML)
+    - Observação: jpackage cria instaladores auto-contidos (sem depender de Java instalado), porém com tamanho maior.
 
 ### Observações sobre Arquitetura (arm64 vs amd64)
 - O JAR (bytecode Java) é multiplataforma. O mesmo artefato roda em qualquer SO/arquitetura com JVM compatível.

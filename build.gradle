@@ -44,6 +44,63 @@ jar {
     }
 }
 
+// Packaging helpers using jpackage (requires JDK with jpackage on PATH)
+def appName = 'BiByte'
+def mainClassFqn = 'bitbyte.MyJFrame'
+def jarFile = { "${appName}-${project.version}.jar" }
+
+tasks.register('packageWinExe', Exec) {
+    dependsOn(tasks.named('build'))
+    commandLine 'jpackage',
+        '--type', 'exe',
+        '--name', appName,
+        '--app-version', project.version,
+        '--input', 'build/libs',
+        '--main-jar', jarFile(),
+        '--main-class', mainClassFqn,
+        '--dest', 'out/win',
+        '--icon', 'process-icon1.ico'
+}
+
+tasks.register('packageWinMsi', Exec) {
+    dependsOn(tasks.named('build'))
+    commandLine 'jpackage',
+        '--type', 'msi',
+        '--name', appName,
+        '--app-version', project.version,
+        '--input', 'build/libs',
+        '--main-jar', jarFile(),
+        '--main-class', mainClassFqn,
+        '--dest', 'out/win',
+        '--icon', 'process-icon1.ico'
+}
+
+tasks.register('packageMacDmg', Exec) {
+    dependsOn(tasks.named('build'))
+    commandLine 'jpackage',
+        '--type', 'dmg',
+        '--name', appName,
+        '--app-version', project.version,
+        '--input', 'build/libs',
+        '--main-jar', jarFile(),
+        '--main-class', mainClassFqn,
+        '--dest', 'out/mac',
+        '--icon', 'process-icon1.ico'
+}
+
+tasks.register('packageDeb', Exec) {
+    dependsOn(tasks.named('build'))
+    commandLine 'jpackage',
+        '--type', 'deb',
+        '--name', appName,
+        '--app-version', project.version,
+        '--input', 'build/libs',
+        '--main-jar', jarFile(),
+        '--main-class', mainClassFqn,
+        '--dest', 'out/deb',
+        '--icon', 'process-icon1.ico'
+}
+
 sourceSets {
     main {
         java {
