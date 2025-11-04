@@ -43,7 +43,14 @@ jobs:
             echo "artifact=build/libs/*.jar" >> $GITHUB_OUTPUT
           fi
 
-      - name: Set up Java (runtime + toolchain)
+      - name: Set up Java 21 (runtime)
+        id: java21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Java (toolchain target)
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -65,6 +72,9 @@ jobs:
 
       - name: Build with Gradle (no caches)
         if: steps.plan.outputs.build_system == 'gradle'
+        env:
+          JAVA_HOME: ${{ steps.java21.outputs.path }}
+          GRADLE_JAVA_HOME: ${{ steps.java21.outputs.path }}
         run: |
           gradle --version
           java -version

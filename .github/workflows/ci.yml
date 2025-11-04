@@ -13,11 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java 25 (runtime)
+      - name: Set up Java 21 (runtime)
+        id: java21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 25
+          java-version: 21
 
       - name: Set up Gradle 8.10.2
         uses: gradle/actions/setup-gradle@v3
@@ -25,12 +26,16 @@ jobs:
           gradle-version: 8.10.2
 
       - name: Gradle Build (no caches, verbose)
+        env:
+          JAVA_HOME: ${{ steps.java21.outputs.path }}
+          GRADLE_JAVA_HOME: ${{ steps.java21.outputs.path }}
         run: |
+          echo JAVA_HOME=$JAVA_HOME
           gradle --version
           java -version
           # Retry once to mitigate transient infra/cache issues
-          gradle build -PjavaTarget=25 --no-daemon --no-configuration-cache --no-build-cache --stacktrace || \
-          (sleep 5 && gradle build -PjavaTarget=25 --no-daemon --no-configuration-cache --no-build-cache --stacktrace)
+          gradle build -PjavaTarget=21 --no-daemon --no-configuration-cache --no-build-cache --stacktrace || \
+          (sleep 5 && gradle build -PjavaTarget=21 --no-daemon --no-configuration-cache --no-build-cache --stacktrace)
 
       - name: Diagnostic (versions + stacktrace)
         run: |
