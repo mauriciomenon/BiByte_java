@@ -55,7 +55,7 @@ jobs:
         if: steps.plan.outputs.build_system == 'gradle'
         uses: gradle/gradle-build-action@v3
         with:
-          gradle-version: 9.2
+          gradle-version: 8.10.2
           arguments: build -PprojVersion=${{ steps.plan.outputs.tag }}
 
       - name: Prepare latest asset name
